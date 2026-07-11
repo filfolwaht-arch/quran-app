@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<!--
+  verify-email.html
+  ----------------------------------------------------------------------------
+  Does double duty as both destinations:
+    - Landed on right after signup (with ?email=... in the URL): shows a
+      "check your inbox" state with a resend button.
+    - Landed on via the actual confirmation link Supabase emailed (with
+      tokens in the URL): shows a brief "verified" state and redirects in.
+  See verify-email.js for how it tells the two apart.
+-->
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Verify your email · Manara</title>
+
+  <script>
+    (function () {
+      var theme = localStorage.getItem('manara_theme') || 'auto';
+      var resolved = theme === 'auto'
+        ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+        : theme;
+      document.documentElement.setAttribute('data-theme', resolved);
+
+      var lang = localStorage.getItem('manara_lang');
+      if (lang && ['en', 'fr', 'ar'].includes(lang)) {
+        document.documentElement.lang = lang;
+        document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+      }
+    })();
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cormorant+Garamond:wght@500;600;700&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/variables.css" />
+  <link rel="stylesheet" href="css/main.css" />
+
+  <script src="env.js"></script>
+</head>
+<body class="is-authing">
+  <div class="auth-shell">
+    <header class="site-header">
+      <a href="index.html" class="brand"><span class="brand-mark">✦</span><span>Manara</span></a>
+      <div class="header-controls">
+        <div class="switcher" role="group" aria-label="Language">
+          <button type="button" data-lang-switch="en">EN</button>
+          <button type="button" data-lang-switch="fr">FR</button>
+          <button type="button" data-lang-switch="ar">AR</button>
+        </div>
+        <div class="switcher" role="group" aria-label="Theme">
+          <button type="button" data-theme-switch="light">☀</button>
+          <button type="button" data-theme-switch="dark">☾</button>
+          <button type="button" data-theme-switch="auto">A</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="auth-main">
+      <div class="card text-center">
+        <!-- State 1: waiting on the user to click the emailed link -->
+        <div id="verify-pending">
+          <div class="verify-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="28" height="28"><path d="M3 6h18v12H3z" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M3 7l9 6 9-6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+          </div>
+          <h1 class="card-title display" data-i18n="verifyEmail.title">Verify your email</h1>
+          <p class="card-subtitle" id="verify-message"></p>
+          <button type="button" class="btn btn-secondary" id="resend-btn" data-i18n="verifyEmail.resend">Resend email</button>
+        </div>
+
+        <!-- State 2: confirmed via the emailed link -->
+        <div id="verify-success" style="display:none">
+          <div class="verify-icon is-success" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="28" height="28"><path d="M5 12l5 5L20 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <h1 class="card-title display" data-i18n="verifyEmail.verifiedTitle">Email verified</h1>
+          <p class="card-subtitle" data-i18n="verifyEmail.verifiedMessage"></p>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script type="module" src="js/verify-email.js"></script>
+</body>
+</html>

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<!--
+  login.html
+  ----------------------------------------------------------------------------
+  Sign in with email + password. Guest-only: redirectIfAuthed() (called from
+  login.js) sends an already-signed-in visitor straight to the dashboard.
+-->
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign in · Manara</title>
+
+  <script>
+    (function () {
+      var theme = localStorage.getItem('manara_theme') || 'auto';
+      var resolved = theme === 'auto'
+        ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+        : theme;
+      document.documentElement.setAttribute('data-theme', resolved);
+
+      var lang = localStorage.getItem('manara_lang');
+      if (lang && ['en', 'fr', 'ar'].includes(lang)) {
+        document.documentElement.lang = lang;
+        document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+      }
+    })();
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cormorant+Garamond:wght@500;600;700&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/variables.css" />
+  <link rel="stylesheet" href="css/main.css" />
+
+  <script src="env.js"></script>
+</head>
+<body class="is-authing">
+  <div class="auth-shell">
+    <header class="site-header">
+      <a href="index.html" class="brand"><span class="brand-mark">✦</span><span>Manara</span></a>
+      <div class="header-controls">
+        <div class="switcher" role="group" aria-label="Language">
+          <button type="button" data-lang-switch="en">EN</button>
+          <button type="button" data-lang-switch="fr">FR</button>
+          <button type="button" data-lang-switch="ar">AR</button>
+        </div>
+        <div class="switcher" role="group" aria-label="Theme">
+          <button type="button" data-theme-switch="light">☀</button>
+          <button type="button" data-theme-switch="dark">☾</button>
+          <button type="button" data-theme-switch="auto">A</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="auth-main">
+      <div class="card">
+        <span class="card-eyebrow"></span>
+        <h1 class="card-title display" data-i18n="login.title">Welcome back</h1>
+        <p class="card-subtitle" data-i18n="login.subtitle">Sign in to continue to your account</p>
+
+        <form id="login-form" novalidate>
+          <div class="field" id="email-field">
+            <label class="field-label" for="email" data-i18n="login.email">Email</label>
+            <input class="input" type="email" id="email" name="email" autocomplete="email" required
+                   data-i18n-placeholder="login.emailPlaceholder" placeholder="you@example.com" />
+            <p class="field-error" data-i18n="validation.invalidEmail"></p>
+          </div>
+
+          <div class="field" id="password-field">
+            <label class="field-label" for="password" data-i18n="login.password">Password</label>
+            <div class="password-field">
+              <input class="input" type="password" id="password" name="password" autocomplete="current-password" required
+                     data-i18n-placeholder="login.passwordPlaceholder" placeholder="Enter your password" />
+              <button type="button" class="password-toggle" aria-label="Show"></button>
+            </div>
+            <p class="field-error" data-i18n="validation.required"></p>
+          </div>
+
+          <div class="field-row">
+            <label class="checkbox-row">
+              <input type="checkbox" id="remember-me" checked />
+              <span data-i18n="login.rememberMe">Remember me</span>
+            </label>
+            <a href="forgot-password.html" class="text-sm" data-i18n="login.forgotPassword">Forgot password?</a>
+          </div>
+
+          <button type="submit" class="btn btn-primary" id="login-submit" data-i18n="login.submit">Sign in</button>
+        </form>
+
+        <div class="motif-divider" aria-hidden="true"></div>
+
+        <p class="card-footer">
+          <span data-i18n="login.noAccount">Don't have an account?</span>
+          <a href="signup.html" data-i18n="login.signUpLink">Sign up</a>
+        </p>
+      </div>
+    </main>
+  </div>
+
+  <script type="module" src="js/login.js"></script>
+</body>
+</html>

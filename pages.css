@@ -1,0 +1,133 @@
+/**
+ * pages.css
+ * ----------------------------------------------------------------------------
+ * Layout for the authenticated app shell (profile.html, settings.html) --
+ * the pieces that don't apply to the single-card guest pages, which are
+ * fully covered by main.css's .auth-shell/.card rules.
+ */
+
+.app-shell { min-height: 100dvh; }
+.app-header {
+  border-block-end: 1px solid var(--border);
+  background: var(--bg-elevated);
+}
+.app-nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+.app-nav a {
+  padding: 8px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: background var(--transition), color var(--transition);
+}
+.app-nav a:hover { color: var(--primary); }
+.app-nav a.is-active { background: var(--primary-soft); color: var(--primary); }
+
+.app-main {
+  max-width: 720px;
+  margin-inline: auto;
+  padding: var(--space-6) var(--space-4) var(--space-8);
+}
+
+.page-title {
+  font-family: var(--font-display-latin);
+  font-size: 2rem;
+  font-weight: 600;
+  margin-block-end: var(--space-1);
+}
+:root[lang='ar'] .page-title { font-family: var(--font-display-arabic); }
+.page-subtitle { color: var(--text-secondary); margin-block-end: var(--space-6); }
+
+/* --- Profile header / avatar --- */
+
+.profile-summary {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-5);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  margin-block-end: var(--space-5);
+}
+.avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--primary-soft);
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display-latin);
+  font-size: 1.5rem;
+  font-weight: 600;
+  overflow: hidden;
+  flex-shrink: 0;
+  border: 2px solid var(--accent);
+}
+.avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+.profile-summary-name { font-size: 1.2rem; font-weight: 700; }
+.profile-summary-meta { color: var(--text-secondary); font-size: 0.85rem; margin-block-start: 2px; }
+
+/* --- Sectioned cards for edit-profile / settings --- */
+
+.section-card {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  margin-block-end: var(--space-5);
+}
+.section-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin-block-end: var(--space-4);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.section-title::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--accent);
+}
+
+.settings-static-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding-block: var(--space-2);
+  font-size: 0.92rem;
+}
+.settings-static-row span:first-child { color: var(--text-secondary); }
+
+/* --- Verify email illustration --- */
+
+.verify-icon {
+  width: 64px;
+  height: 64px;
+  margin-inline: auto;
+  margin-block-end: var(--space-4);
+  border-radius: 50%;
+  background: var(--primary-soft);
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.verify-icon.is-success { background: var(--success-soft); color: var(--success); }
+
+@media (max-width: 600px) {
+  .app-main { padding: var(--space-5) var(--space-4) var(--space-7); }
+  .profile-summary { flex-direction: column; text-align: center; }
+}

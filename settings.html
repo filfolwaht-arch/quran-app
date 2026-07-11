@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<!--
+  settings.html
+  ----------------------------------------------------------------------------
+  Protected page (same requireAuth() guard as profile.html). Account-level
+  controls that don't belong on the public-facing profile: password, email,
+  language preference (synced to profiles.preferred_language), and the
+  device-local appearance setting.
+-->
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Account settings · Manara</title>
+
+  <script>
+    (function () {
+      var theme = localStorage.getItem('manara_theme') || 'auto';
+      var resolved = theme === 'auto'
+        ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+        : theme;
+      document.documentElement.setAttribute('data-theme', resolved);
+
+      var lang = localStorage.getItem('manara_lang');
+      if (lang && ['en', 'fr', 'ar'].includes(lang)) {
+        document.documentElement.lang = lang;
+        document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+      }
+    })();
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cormorant+Garamond:wght@500;600;700&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/variables.css" />
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="css/pages.css" />
+
+  <script src="env.js"></script>
+</head>
+<body class="is-authing">
+  <div class="app-shell">
+    <header class="site-header app-header">
+      <a href="profile.html" class="brand"><span class="brand-mark">✦</span><span>Manara</span></a>
+      <nav class="app-nav">
+        <a href="profile.html" data-i18n="common.navProfile">Profile</a>
+        <a href="settings.html" class="is-active" data-i18n="common.navSettings">Settings</a>
+      </nav>
+      <div class="header-controls">
+        <div class="switcher" role="group" aria-label="Language">
+          <button type="button" data-lang-switch="en">EN</button>
+          <button type="button" data-lang-switch="fr">FR</button>
+          <button type="button" data-lang-switch="ar">AR</button>
+        </div>
+        <div class="switcher" role="group" aria-label="Theme">
+          <button type="button" data-theme-switch="light">☀</button>
+          <button type="button" data-theme-switch="dark">☾</button>
+          <button type="button" data-theme-switch="auto">A</button>
+        </div>
+        <button type="button" class="btn btn-secondary btn-auto" id="sign-out-btn" data-i18n="common.signOut">Sign out</button>
+      </div>
+    </header>
+
+    <main class="app-main">
+      <h1 class="page-title display" data-i18n="settings.title">Account settings</h1>
+      <p class="page-subtitle">&nbsp;</p>
+
+      <div class="section-card">
+        <h2 class="section-title" data-i18n="settings.passwordSection">Password</h2>
+        <form id="password-form" novalidate>
+          <div class="field" id="new-password-field">
+            <label class="field-label" for="new-password" data-i18n="settings.newPassword">New password</label>
+            <div class="password-field">
+              <input class="input" type="password" id="new-password" autocomplete="new-password" />
+              <button type="button" class="password-toggle" aria-label="Show"></button>
+            </div>
+            <div class="strength-meter" id="strength-meter" data-score="0">
+              <div class="strength-bars"><span></span><span></span><span></span><span></span></div>
+              <span class="strength-label" id="strength-label"></span>
+            </div>
+            <p class="field-error" id="new-password-error"></p>
+          </div>
+          <div class="field" id="confirm-password-field">
+            <label class="field-label" for="confirm-new-password" data-i18n="settings.confirmNewPassword">Confirm new password</label>
+            <div class="password-field">
+              <input class="input" type="password" id="confirm-new-password" autocomplete="new-password" />
+              <button type="button" class="password-toggle" aria-label="Show"></button>
+            </div>
+            <p class="field-error" data-i18n="validation.passwordsDoNotMatch"></p>
+          </div>
+          <button type="submit" class="btn btn-primary btn-auto" id="password-submit" data-i18n="settings.updatePassword">Update password</button>
+        </form>
+      </div>
+
+      <div class="section-card">
+        <h2 class="section-title" data-i18n="settings.emailSection">Email address</h2>
+        <div class="settings-static-row">
+          <span data-i18n="settings.currentEmail">Current email</span>
+          <strong id="current-email"></strong>
+        </div>
+        <form id="email-form" novalidate class="mt-4">
+          <div class="field" id="new-email-field">
+            <label class="field-label" for="new-email" data-i18n="settings.newEmail">New email</label>
+            <input class="input" type="email" id="new-email" autocomplete="email" />
+            <p class="field-error" data-i18n="validation.invalidEmail"></p>
+          </div>
+          <button type="submit" class="btn btn-secondary btn-auto" id="email-submit" data-i18n="settings.updateEmail">Update email</button>
+        </form>
+      </div>
+
+      <div class="section-card">
+        <h2 class="section-title" data-i18n="settings.languageSection">Language</h2>
+        <div class="switcher" role="group" aria-label="Language">
+          <button type="button" data-lang-switch="en">English</button>
+          <button type="button" data-lang-switch="fr">Français</button>
+          <button type="button" data-lang-switch="ar">العربية</button>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2 class="section-title" data-i18n="settings.themeSection">Appearance</h2>
+        <div class="switcher" role="group" aria-label="Theme">
+          <button type="button" data-theme-switch="light" data-i18n="common.themeLight">Light</button>
+          <button type="button" data-theme-switch="dark" data-i18n="common.themeDark">Dark</button>
+          <button type="button" data-theme-switch="auto" data-i18n="common.themeAuto">Auto</button>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script type="module" src="js/settings.js"></script>
+</body>
+</html>

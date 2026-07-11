@@ -1,0 +1,91 @@
+/**
+ * variables.css
+ * ----------------------------------------------------------------------------
+ * Design tokens. Palette is a deep emerald / antique gold / aged-parchment
+ * system -- a manuscript-page reference, not a generic neutral theme -- with
+ * dark mode as its own considered variant (a warm near-black green, not a
+ * flat neutral inversion). Amiri carries Arabic display type, Cormorant
+ * Garamond carries Latin display type, Cairo is the workhorse UI font for
+ * both scripts. <html data-theme="light|dark"> switches the whole set;
+ * theme.js sets that attribute before first paint to avoid a flash.
+ */
+
+:root {
+  /* ---- Color: light (parchment) ---- */
+  --bg: #f6efdd;
+  --bg-elevated: #fffdf7;
+  --bg-subtle: #efe6cc;
+  --text-primary: #1b2a22;
+  --text-secondary: #5a6b5f;
+  --primary: #14523a;
+  --primary-hover: #0f3d2a;
+  --primary-soft: rgba(20, 82, 58, 0.08);
+  --accent: #a67c2e;
+  --accent-hover: #8c6624;
+  --border: #e3d6b8;
+  --error: #b3452c;
+  --error-soft: rgba(179, 69, 44, 0.1);
+  --success: #2f8558;
+  --success-soft: rgba(47, 133, 88, 0.1);
+  --shadow: rgba(27, 42, 34, 0.14);
+
+  /* ---- Type ---- */
+  --font-display-latin: 'Cormorant Garamond', serif;
+  --font-display-arabic: 'Amiri', serif;
+  --font-body: 'Cairo', system-ui, sans-serif;
+
+  /* ---- Spacing (4px base) ---- */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+
+  /* ---- Shape / motion ---- */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --transition: 180ms ease;
+  --transition-slow: 420ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+[data-theme='dark'] {
+  --bg: #0f1b15;
+  --bg-elevated: #16261d;
+  --bg-subtle: #1c2f23;
+  --text-primary: #f1ead6;
+  --text-secondary: #9fae9f;
+  --primary: #3fa579;
+  --primary-hover: #56bc90;
+  --primary-soft: rgba(63, 165, 121, 0.16);
+  --accent: #d4a94a;
+  --accent-hover: #e0bb66;
+  --border: #2a3b30;
+  --error: #e07856;
+  --error-soft: rgba(224, 120, 86, 0.16);
+  --success: #4fbf8d;
+  --success-soft: rgba(79, 191, 141, 0.16);
+  --shadow: rgba(0, 0, 0, 0.45);
+}
+
+/* Display font follows script direction: Amiri for Arabic, Cormorant for
+   Latin. Applied via the .display class rather than globally by [lang] so
+   body/UI text always stays on Cairo regardless of language. */
+.display {
+  font-family: var(--font-display-latin);
+}
+:root[lang='ar'] .display {
+  font-family: var(--font-display-arabic);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

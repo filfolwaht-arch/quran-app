@@ -1,0 +1,426 @@
+/**
+ * main.css
+ * ----------------------------------------------------------------------------
+ * Reset, layout primitives, and every reusable component (header, card,
+ * form controls, buttons, toasts, spinner, password strength meter).
+ * Page-specific layout tweaks live in pages.css. Written with CSS logical
+ * properties throughout (margin-inline, inset-inline-start, text-align:
+ * start, etc.) so RTL Arabic and LTR French/English share one set of rules
+ * instead of a duplicated [dir="rtl"] override block.
+ */
+
+/* ---------------------------------------------------------------------- */
+/* Reset                                                                    */
+/* ---------------------------------------------------------------------- */
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  transition: background var(--transition), color var(--transition);
+}
+h1, h2, h3, p { margin: 0; }
+button, input, select { font: inherit; color: inherit; }
+a { color: var(--primary); }
+[data-theme='dark'] a { color: var(--accent); }
+img { max-width: 100%; display: block; }
+
+/* Hides page content until its auth-guard check resolves, to avoid a
+   flash of a form the visitor isn't supposed to see. */
+body.is-authing .app-shell,
+body.is-authing .auth-shell { visibility: hidden; }
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* ---------------------------------------------------------------------- */
+/* Full-page loading state (index.html, pre-guard)                         */
+/* ---------------------------------------------------------------------- */
+
+.full-page-loader {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  color: var(--text-secondary);
+}
+.full-page-loader .spinner-star { width: 32px; height: 32px; }
+
+/* ---------------------------------------------------------------------- */
+/* Header (shared by guest pages and the app shell)                        */
+/* ---------------------------------------------------------------------- */
+
+.site-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-5);
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-display-latin);
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--primary);
+  text-decoration: none;
+  letter-spacing: 0.01em;
+}
+:root[lang='ar'] .brand { font-family: var(--font-display-arabic); }
+[data-theme='dark'] .brand { color: var(--accent); }
+.brand-mark { color: var(--accent); }
+
+.header-controls { display: flex; align-items: center; gap: var(--space-2); }
+
+/* Pill-style switchers used for both language and theme */
+.switcher {
+  display: inline-flex;
+  background: var(--bg-subtle);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 3px;
+  gap: 2px;
+}
+.switcher button {
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+  padding: 5px 10px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background var(--transition), color var(--transition);
+}
+.switcher button.is-active {
+  background: var(--primary);
+  color: var(--bg-elevated);
+}
+[data-theme='dark'] .switcher button.is-active { color: var(--bg); }
+
+.icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--bg-elevated);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: background var(--transition), color var(--transition);
+}
+.icon-button:hover { color: var(--primary); }
+
+/* ---------------------------------------------------------------------- */
+/* Auth pages: centered card on a quiet geometric backdrop                 */
+/* ---------------------------------------------------------------------- */
+
+.auth-shell {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+.auth-main {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-5) var(--space-4) var(--space-8);
+  background-image:
+    radial-gradient(circle at 15% 20%, var(--primary-soft), transparent 45%),
+    radial-gradient(circle at 85% 80%, var(--primary-soft), transparent 45%);
+}
+
+.card {
+  width: 100%;
+  max-width: 420px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 24px 48px -24px var(--shadow);
+  padding: var(--space-6) var(--space-5);
+  animation: card-in var(--transition-slow) both;
+}
+@keyframes card-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.card-eyebrow {
+  display: block;
+  width: 40px;
+  height: 3px;
+  border-radius: 999px;
+  background: var(--accent);
+  margin-block-end: var(--space-4);
+}
+.card-title {
+  font-family: var(--font-display-latin);
+  font-size: 1.9rem;
+  font-weight: 600;
+  margin-block-end: var(--space-2);
+}
+:root[lang='ar'] .card-title { font-family: var(--font-display-arabic); }
+.card-subtitle {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  margin-block-end: var(--space-5);
+  line-height: 1.5;
+}
+
+/* A restrained geometric divider -- the star motif again, laid flat,
+   used between a form and a secondary action ("sign in" / "sign up"). */
+.motif-divider {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-block: var(--space-5);
+  color: var(--border);
+}
+.motif-divider::before,
+.motif-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+.card-footer {
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+.card-footer a { font-weight: 600; text-decoration: none; }
+.card-footer a:hover { text-decoration: underline; }
+
+/* ---------------------------------------------------------------------- */
+/* Forms                                                                    */
+/* ---------------------------------------------------------------------- */
+
+.field { margin-block-end: var(--space-4); }
+.field-label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-block-end: var(--space-2);
+}
+.field-hint {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  margin-block-start: var(--space-1);
+}
+.field-error {
+  font-size: 0.78rem;
+  color: var(--error);
+  margin-block-start: var(--space-1);
+  display: none;
+}
+.field.has-error .field-error { display: block; }
+.field.has-error input { border-color: var(--error); }
+
+.input,
+select.input {
+  width: 100%;
+  padding: 11px 14px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+.input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-soft);
+}
+.input::placeholder { color: var(--text-secondary); opacity: 0.7; }
+.input:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.password-field { position: relative; }
+.password-field .input { padding-inline-end: 44px; }
+.password-toggle {
+  position: absolute;
+  inset-inline-end: 4px;
+  inset-block-start: 50%;
+  transform: translateY(-50%);
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.password-toggle:hover { color: var(--primary); }
+
+.checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+}
+.checkbox-row input { width: 16px; height: 16px; accent-color: var(--primary); }
+
+.field-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-block-end: var(--space-4);
+}
+
+/* Password strength meter */
+.strength-meter { margin-block: var(--space-2) var(--space-4); }
+.strength-bars { display: flex; gap: 4px; margin-block-end: var(--space-1); }
+.strength-bars span {
+  flex: 1;
+  height: 4px;
+  border-radius: 999px;
+  background: var(--border);
+  transition: background var(--transition);
+}
+.strength-label { font-size: 0.78rem; color: var(--text-secondary); }
+.strength-meter[data-score='1'] .strength-bars span:nth-child(-n+1),
+.strength-meter[data-score='1'] .strength-label { background: var(--error); color: var(--error); }
+.strength-meter[data-score='2'] .strength-bars span:nth-child(-n+2),
+.strength-meter[data-score='2'] .strength-label { background: var(--accent); color: var(--accent); }
+.strength-meter[data-score='3'] .strength-bars span:nth-child(-n+3),
+.strength-meter[data-score='3'] .strength-label { background: var(--primary); color: var(--primary); }
+.strength-meter[data-score='4'] .strength-bars span:nth-child(-n+4),
+.strength-meter[data-score='4'] .strength-label { background: var(--success); color: var(--success); }
+
+/* ---------------------------------------------------------------------- */
+/* Buttons                                                                  */
+/* ---------------------------------------------------------------------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  width: 100%;
+  padding: 12px 20px;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background var(--transition), border-color var(--transition), transform var(--transition);
+}
+.btn:active { transform: scale(0.98); }
+.btn:disabled { cursor: not-allowed; opacity: 0.75; transform: none; }
+
+.btn-primary { background: var(--primary); color: #fff; }
+.btn-primary:hover:not(:disabled) { background: var(--primary-hover); }
+
+.btn-secondary { background: transparent; border-color: var(--border); color: var(--text-primary); }
+.btn-secondary:hover:not(:disabled) { border-color: var(--primary); color: var(--primary); }
+
+.btn-danger { background: transparent; border-color: var(--error); color: var(--error); }
+.btn-danger:hover:not(:disabled) { background: var(--error-soft); }
+
+.btn-block { width: 100%; }
+.btn-auto { width: auto; }
+
+/* ---------------------------------------------------------------------- */
+/* Spinner (signature geometric mark, reused as the loading indicator)     */
+/* ---------------------------------------------------------------------- */
+
+.spinner-star {
+  animation: spin 1.4s linear infinite;
+  flex-shrink: 0;
+}
+.spinner-star polygon { fill: none; stroke: currentColor; stroke-width: 1.4; }
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ---------------------------------------------------------------------- */
+/* Inline alert banners (invalid link, empty states, etc.)                 */
+/* ---------------------------------------------------------------------- */
+
+.alert {
+  display: flex;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  margin-block-end: var(--space-4);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.alert-error { background: var(--error-soft); border-color: var(--error); color: var(--error); }
+.alert-success { background: var(--success-soft); border-color: var(--success); color: var(--success); }
+
+/* ---------------------------------------------------------------------- */
+/* Toasts                                                                   */
+/* ---------------------------------------------------------------------- */
+
+.toast-root {
+  position: fixed;
+  inset-block-start: var(--space-4);
+  inset-inline: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  z-index: 1000;
+  pointer-events: none;
+  padding-inline: var(--space-4);
+}
+.toast {
+  pointer-events: auto;
+  max-width: 420px;
+  width: 100%;
+  padding: 13px 18px;
+  border-radius: var(--radius-md);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  box-shadow: 0 12px 32px -12px var(--shadow);
+  font-size: 0.88rem;
+  opacity: 0;
+  transform: translateY(-8px);
+  transition: opacity var(--transition-slow), transform var(--transition-slow);
+  cursor: pointer;
+}
+.toast.is-visible { opacity: 1; transform: translateY(0); }
+.toast--success { border-inline-start: 3px solid var(--success); }
+.toast--error { border-inline-start: 3px solid var(--error); }
+.toast--info { border-inline-start: 3px solid var(--primary); }
+
+/* ---------------------------------------------------------------------- */
+/* Utility                                                                  */
+/* ---------------------------------------------------------------------- */
+
+.text-center { text-align: center; }
+.text-sm { font-size: 0.85rem; }
+.mx-auto { margin-inline: auto; }
+.mt-4 { margin-block-start: var(--space-4); }
+.visually-hidden {
+  position: absolute;
+  width: 1px; height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+@media (max-width: 480px) {
+  .card { padding: var(--space-5) var(--space-4); border-radius: var(--radius-md); }
+  .site-header { padding: var(--space-3) var(--space-4); }
+}

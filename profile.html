@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<!--
+  profile.html
+  ----------------------------------------------------------------------------
+  Protected page -- requireAuth() in profile.js redirects to login.html if
+  there's no session. Doubles as the signed-in landing page/dashboard (see
+  ROUTES.DASHBOARD in constants.js): shows an overview card plus an editable
+  full_name / username / avatar_url form backed by public.profiles.
+-->
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Profile · Manara</title>
+
+  <script>
+    (function () {
+      var theme = localStorage.getItem('manara_theme') || 'auto';
+      var resolved = theme === 'auto'
+        ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+        : theme;
+      document.documentElement.setAttribute('data-theme', resolved);
+
+      var lang = localStorage.getItem('manara_lang');
+      if (lang && ['en', 'fr', 'ar'].includes(lang)) {
+        document.documentElement.lang = lang;
+        document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+      }
+    })();
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cormorant+Garamond:wght@500;600;700&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/variables.css" />
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="css/pages.css" />
+
+  <script src="env.js"></script>
+</head>
+<body class="is-authing">
+  <div class="app-shell">
+    <header class="site-header app-header">
+      <a href="profile.html" class="brand"><span class="brand-mark">✦</span><span>Manara</span></a>
+      <nav class="app-nav">
+        <a href="profile.html" class="is-active" data-i18n="common.navProfile">Profile</a>
+        <a href="settings.html" data-i18n="common.navSettings">Settings</a>
+      </nav>
+      <div class="header-controls">
+        <div class="switcher" role="group" aria-label="Language">
+          <button type="button" data-lang-switch="en">EN</button>
+          <button type="button" data-lang-switch="fr">FR</button>
+          <button type="button" data-lang-switch="ar">AR</button>
+        </div>
+        <div class="switcher" role="group" aria-label="Theme">
+          <button type="button" data-theme-switch="light">☀</button>
+          <button type="button" data-theme-switch="dark">☾</button>
+          <button type="button" data-theme-switch="auto">A</button>
+        </div>
+        <button type="button" class="btn btn-secondary btn-auto" id="sign-out-btn" data-i18n="common.signOut">Sign out</button>
+      </div>
+    </header>
+
+    <main class="app-main">
+      <h1 class="page-title display" data-i18n="profile.title">Profile</h1>
+      <p class="page-subtitle" id="welcome-message"></p>
+
+      <div class="profile-summary">
+        <div class="avatar" id="avatar-display"></div>
+        <div>
+          <div class="profile-summary-name" id="summary-name"></div>
+          <div class="profile-summary-meta" id="summary-meta"></div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2 class="section-title" data-i18n="profile.editTitle">Edit profile</h2>
+
+        <form id="profile-form" novalidate>
+          <div class="field">
+            <label class="field-label" for="full-name" data-i18n="profile.fullName">Full name</label>
+            <input class="input" type="text" id="full-name" name="fullName" autocomplete="name" />
+          </div>
+
+          <div class="field">
+            <label class="field-label" for="username" data-i18n="profile.username">Username</label>
+            <input class="input" type="text" id="username" name="username" autocomplete="username" />
+            <p class="field-hint" id="username-status"></p>
+          </div>
+
+          <div class="field">
+            <label class="field-label" for="avatar-url" data-i18n="profile.avatarUrl">Avatar URL</label>
+            <input class="input" type="url" id="avatar-url" name="avatarUrl" data-i18n-placeholder="profile.avatarUrlHint" />
+          </div>
+
+          <div class="field">
+            <label class="field-label" for="email-readonly" data-i18n="profile.email">Email</label>
+            <input class="input" type="email" id="email-readonly" disabled />
+            <p class="field-hint" data-i18n="profile.emailHint">Change your email from Settings</p>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-auto" id="profile-save" data-i18n="profile.save">Save changes</button>
+        </form>
+      </div>
+    </main>
+  </div>
+
+  <script type="module" src="js/profile.js"></script>
+</body>
+</html>

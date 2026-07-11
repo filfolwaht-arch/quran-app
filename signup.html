@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<!--
+  signup.html
+  ----------------------------------------------------------------------------
+  Creates an account with email + password, plus full_name/username passed
+  as signUp() metadata so the DB trigger (migration 003) can seed the
+  profiles row. Guest-only, same as login.html.
+-->
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Create account · Manara</title>
+
+  <script>
+    (function () {
+      var theme = localStorage.getItem('manara_theme') || 'auto';
+      var resolved = theme === 'auto'
+        ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+        : theme;
+      document.documentElement.setAttribute('data-theme', resolved);
+
+      var lang = localStorage.getItem('manara_lang');
+      if (lang && ['en', 'fr', 'ar'].includes(lang)) {
+        document.documentElement.lang = lang;
+        document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+      }
+    })();
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cormorant+Garamond:wght@500;600;700&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/variables.css" />
+  <link rel="stylesheet" href="css/main.css" />
+
+  <script src="env.js"></script>
+</head>
+<body class="is-authing">
+  <div class="auth-shell">
+    <header class="site-header">
+      <a href="index.html" class="brand"><span class="brand-mark">✦</span><span>Manara</span></a>
+      <div class="header-controls">
+        <div class="switcher" role="group" aria-label="Language">
+          <button type="button" data-lang-switch="en">EN</button>
+          <button type="button" data-lang-switch="fr">FR</button>
+          <button type="button" data-lang-switch="ar">AR</button>
+        </div>
+        <div class="switcher" role="group" aria-label="Theme">
+          <button type="button" data-theme-switch="light">☀</button>
+          <button type="button" data-theme-switch="dark">☾</button>
+          <button type="button" data-theme-switch="auto">A</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="auth-main">
+      <div class="card">
+        <span class="card-eyebrow"></span>
+        <h1 class="card-title display" data-i18n="signup.title">Create your account</h1>
+        <p class="card-subtitle" data-i18n="signup.subtitle">Start by telling us a bit about yourself</p>
+
+        <form id="signup-form" novalidate>
+          <div class="field" id="fullname-field">
+            <label class="field-label" for="full-name" data-i18n="signup.fullName">Full name</label>
+            <input class="input" type="text" id="full-name" name="fullName" autocomplete="name" required
+                   data-i18n-placeholder="signup.fullNamePlaceholder" />
+            <p class="field-error" data-i18n="validation.required"></p>
+          </div>
+
+          <div class="field" id="username-field">
+            <label class="field-label" for="username" data-i18n="signup.username">Username</label>
+            <input class="input" type="text" id="username" name="username" autocomplete="username" required
+                   data-i18n-placeholder="signup.usernamePlaceholder" />
+            <p class="field-hint" id="username-status" data-i18n="signup.usernameHint"></p>
+          </div>
+
+          <div class="field" id="email-field">
+            <label class="field-label" for="email" data-i18n="signup.email">Email</label>
+            <input class="input" type="email" id="email" name="email" autocomplete="email" required
+                   data-i18n-placeholder="signup.emailPlaceholder" />
+            <p class="field-error" data-i18n="validation.invalidEmail"></p>
+          </div>
+
+          <div class="field" id="password-field">
+            <label class="field-label" for="password" data-i18n="signup.password">Password</label>
+            <div class="password-field">
+              <input class="input" type="password" id="password" name="password" autocomplete="new-password" required
+                     data-i18n-placeholder="signup.passwordPlaceholder" />
+              <button type="button" class="password-toggle" aria-label="Show"></button>
+            </div>
+            <div class="strength-meter" id="strength-meter" data-score="0">
+              <div class="strength-bars"><span></span><span></span><span></span><span></span></div>
+              <span class="strength-label" id="strength-label"></span>
+            </div>
+            <p class="field-error" id="password-error"></p>
+          </div>
+
+          <div class="field" id="confirm-password-field">
+            <label class="field-label" for="confirm-password" data-i18n="signup.confirmPassword">Confirm password</label>
+            <div class="password-field">
+              <input class="input" type="password" id="confirm-password" name="confirmPassword" autocomplete="new-password" required
+                     data-i18n-placeholder="signup.confirmPasswordPlaceholder" />
+              <button type="button" class="password-toggle" aria-label="Show"></button>
+            </div>
+            <p class="field-error" data-i18n="validation.passwordsDoNotMatch"></p>
+          </div>
+
+          <button type="submit" class="btn btn-primary" id="signup-submit" data-i18n="signup.submit">Create account</button>
+        </form>
+
+        <div class="motif-divider" aria-hidden="true"></div>
+
+        <p class="card-footer">
+          <span data-i18n="signup.haveAccount">Already have an account?</span>
+          <a href="login.html" data-i18n="signup.loginLink">Sign in</a>
+        </p>
+      </div>
+    </main>
+  </div>
+
+  <script type="module" src="js/signup.js"></script>
+</body>
+</html>
